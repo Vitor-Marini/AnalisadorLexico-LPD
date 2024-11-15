@@ -1,5 +1,3 @@
-import pandas as pd
-
 #Dicionario de tokens
 TOKENS = {
     "program": "sprogram",
@@ -44,18 +42,16 @@ TOKENS = {
     "]": "sfecha_colchete",
 }
 
+
 OPERADORES_E_SIMBOLOS = [":", "+", "-", "*", "/", "=", "<", ">", ";", ",", ".", "(", ")", "[", "]"]
 
 
-#Classe que representa um token
+#classe que representa um token
 class Token:
     def __init__(self, tipo, valor, linha):
         self.tipo = tipo
         self.valor = valor
         self.linha = linha
-
-    def __repr__(self):
-        return f'Token({self.tipo}, {self.valor}, linha {self.linha})'
 
 
 def analisar_lexico(arquivo):
@@ -68,23 +64,23 @@ def analisar_lexico(arquivo):
         while i < len(conteudo):
             char = conteudo[i]
 
-            # Ignorar espaços em branco e contar linhas
+            # ignorar espaços em branco
             if char.isspace():
                 if char == '\n':
                     linha_atual += 1
                 i += 1
                 continue
 
-            # Tratar comentários
+            #ignora o comentario inteiro
             if char == '{':
                 while i < len(conteudo) and conteudo[i] != '}':
                     if conteudo[i] == '\n':
                         linha_atual += 1
                     i += 1
-                i += 1  # Ignorar o '}' final
+                i += 1 
                 continue
 
-            # Tratar números
+            # trata os numeros
             if char.isdigit():
                 inicio = i
                 while i < len(conteudo) and conteudo[i].isdigit():
@@ -93,7 +89,7 @@ def analisar_lexico(arquivo):
                 tokens_list.append(Token("snúmero", numero, linha_atual))
                 continue
 
-            # Tratar identificadores e palavras reservadas
+            # trata identificadores e palvras reservadas
             if char.isalpha():
                 inicio = i
                 while i < len(conteudo) and (conteudo[i].isalnum() or conteudo[i] == '_'):
@@ -103,8 +99,7 @@ def analisar_lexico(arquivo):
                 tokens_list.append(Token(tipo, palavra, linha_atual))
                 continue
              
-
-            # Tratar operadores e símbolos
+            # trata operadores e simbolos
             if char in OPERADORES_E_SIMBOLOS:
                 if char == ':' and i + 1 < len(conteudo) and conteudo[i + 1] == '=':
                     tokens_list.append(Token("satribuição", ":=", linha_atual))
@@ -115,21 +110,22 @@ def analisar_lexico(arquivo):
                     i += 1
                 continue
 
-            # Se não for reconhecido
+            
             i += 1 
 
     return tokens_list
 
-# Função que cria tabela exibindo os resultados
-from tabulate import tabulate
 
+# Função que cria tabela exibindo os resultados
 def gerar_tabela(tokens_list):
+    import pandas as pd
+    from tabulate import tabulate
+
     data = {'Token': [token.valor for token in tokens],
             'Classificação': [token.tipo for token in tokens],
             'Linha': [token.linha for token in tokens]}
     df = pd.DataFrame(data)
     
-    # Imprime o DataFrame sem o índice
     print(tabulate(df, headers='keys', tablefmt='grid', showindex=False))
 
 
