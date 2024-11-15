@@ -1,0 +1,19 @@
+Program teste;
+
+Var
+
+char c;
+
+Begin
+
+c:= ‘A’; { atribui o valor 65 (código
+ASCII da letra A) a variável c }
+
+c:= c + 1;
+
+
+writec(c); { escreve B }
+
+writed(c); { escreve 66 }
+
+End.
