@@ -1,3 +1,6 @@
+import pandas as pd
+from tabulate import tabulate
+
 #Dicionario de tokens
 TOKENS = {
     "program": "sprogram",
@@ -46,7 +49,9 @@ TOKENS = {
 OPERADORES_E_SIMBOLOS = [":", "+", "-", "*", "/", "=", "<", ">", ";", ",", ".", "(", ")", "[", "]"]
 
 
-#classe que representa um token
+#classe que representa um token, tendo seu tipo ,
+#o valor o qual é propio token e 
+#linha em que foi encontrado
 class Token:
     def __init__(self, tipo, valor, linha):
         self.tipo = tipo
@@ -54,13 +59,18 @@ class Token:
         self.linha = linha
 
 
+
+#funçao que realiza a analize lexica
 def analisar_lexico(arquivo):
-    tokens_list = []
-    linha_atual = 1
+    tokens_list = []#cria uma lista para armazenar todos os tokens encontrados
+    linha_atual = 1#inicializa na primeira linha
+
 
     with open(arquivo, 'r') as codigo_fonte:
         conteudo = codigo_fonte.read()
         i = 0
+
+        #executa o while até o fim do programa de entrada
         while i < len(conteudo):
             char = conteudo[i]
 
@@ -118,8 +128,6 @@ def analisar_lexico(arquivo):
 
 # Função que cria tabela exibindo os resultados
 def gerar_tabela(tokens_list):
-    import pandas as pd
-    from tabulate import tabulate
 
     data = {'Token': [token.valor for token in tokens],
             'Classificação': [token.tipo for token in tokens],
@@ -129,6 +137,9 @@ def gerar_tabela(tokens_list):
     print(tabulate(df, headers='keys', tablefmt='grid', showindex=False))
 
 
+
+#Chamada do programa
 arquivo = 'input.txt'  
 tokens = analisar_lexico(arquivo)
 gerar_tabela(tokens)
+
